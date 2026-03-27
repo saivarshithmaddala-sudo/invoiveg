@@ -1,0 +1,50 @@
+const mongoose = require('mongoose');
+
+const itemSchema = new mongoose.Schema({
+    productName: { type: String, required: true },
+    description: { type: String },
+    quantity: { type: Number, required: true },
+    unitPrice: { type: Number, required: true },
+    tax: { type: Number, default: 0 },
+    discount: { type: Number, default: 0 },
+    lineTotal: { type: Number, required: true }
+});
+
+const invoiceSchema = new mongoose.Schema({
+    businessName: { type: String, required: true, default: 'Akshara Enterprises' },
+    businessAddress: { type: String, required: true },
+    businessEmail: { type: String, required: true },
+    businessPhone: { type: String, required: true },
+
+    customerName: { type: String, required: true },
+    customerAddress: { type: String, required: true },
+    customerEmail: { type: String },
+    customerPhone: { type: String },
+
+    invoiceNumber: { type: String, required: true, unique: true },
+    invoiceDate: { type: Date, default: Date.now },
+    dueDate: { type: Date, required: true },
+    status: { 
+        type: String, 
+        enum: ['Paid', 'Unpaid', 'Pending'], 
+        default: 'Pending' 
+    },
+    challanStatus: { type: String },
+
+    items: [itemSchema],
+    
+    subtotal: { type: Number, required: true },
+    totalTax: { type: Number, required: true },
+    totalDiscount: { type: Number, required: true },
+    grandTotal: { type: Number, required: true },
+    
+    notes: { type: String },
+    logo: { type: String }, // Placeholder for logo URL or Base64 string
+    
+    // Ownership Tracking
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userName: { type: String, required: true }
+
+}, { timestamps: true });
+
+module.exports = mongoose.model('Invoice', invoiceSchema);
