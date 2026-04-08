@@ -208,21 +208,21 @@ const ProductManager = () => {
                 <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#22050a]/60 p-6 backdrop-blur-md">
                     <div className="glass w-full max-w-lg overflow-hidden rounded-3xl border border-white/45 shadow-2xl fade-in">
                         <div className="flex items-center justify-between border-b border-[#ecdfe2] p-8">
-                            <h3 className="text-2xl font-black font-outfit text-slate-900">
+                            <h3 className="text-2xl font-black font-outfit text-white">
                                 {editingProduct ? 'Update Master Product' : 'Register New Product'}
                             </h3>
-                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-900">
+                            <button onClick={() => setIsModalOpen(false)} className="text-white/60 hover:text-white">
                                 <X size={24} />
                             </button>
                         </div>
                         
                         <form onSubmit={handleSubmit} className="p-8 space-y-6">
                             <div>
-                                <label className="label">Product Name</label>
+                                <label className="label text-white">Product Name</label>
                                 <input 
                                     type="text" 
                                     required
-                                    className="input-field h-12 font-bold text-[#7E0E16]"
+                                    className="input-field h-12 font-bold text-white bg-white/10 border-white/20 placeholder:text-white/40"
                                     placeholder="e.g. Premium Basmati Rice"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -231,22 +231,22 @@ const ProductManager = () => {
 
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="label">Standard Price (₹)</label>
+                                    <label className="label text-white">Standard Price (₹)</label>
                                     <input 
                                         type="number" 
                                         required
-                                        className="input-field h-12 font-black"
+                                        className="input-field h-12 font-black text-white bg-white/10 border-white/20 placeholder:text-white/40"
                                         placeholder="0.00"
                                         value={formData.price}
                                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="label">Net Weight (ml,kg,gm,L)</label>
+                                    <label className="label text-white">Net Weight (ml,kg,gm,L)</label>
                                     <input 
                                         type="text" 
                                         required
-                                        className="input-field h-12 font-black"
+                                        className="input-field h-12 font-black text-white bg-white/10 border-white/20 placeholder:text-white/40"
                                         placeholder="e.g. 500g, 1L"
                                         value={formData.packetWeight} 
                                         onChange={(e) => setFormData({ ...formData, packetWeight: e.target.value })}
@@ -255,17 +255,17 @@ const ProductManager = () => {
                             </div>
 
                             <div>
-                                <label className="label">Select Brand</label>
+                                <label className="label text-white">Select Brand</label>
                                 <select 
-                                    className="input-field h-12 font-black appearance-none cursor-pointer"
+                                    className="input-field h-12 font-black appearance-none cursor-pointer text-white bg-white/10 border-white/20"
                                     required
                                     value={formData.brand}
                                     onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
                                 >
-                                    <option value="" disabled>Choose Brand...</option>
-                                    <option value="JAYA JANARDHANA">JAYA JANARDHANA</option>
-                                    <option value="SRR">SRR</option>
-                                    <option value="MILLETS PRO">MILLETS PRO</option>
+                                    <option value="" className="text-slate-900 bg-white" disabled>Choose Brand...</option>
+                                    <option value="JAYA JANARDHANA" className="text-slate-900 bg-white">JAYA JANARDHANA</option>
+                                    <option value="SRR" className="text-slate-900 bg-white">SRR</option>
+                                    <option value="MILLETS PRO" className="text-slate-900 bg-white">MILLETS PRO</option>
                                 </select>
                             </div>
                             
