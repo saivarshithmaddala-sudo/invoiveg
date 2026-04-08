@@ -2,24 +2,34 @@
  * Invoice utility functions for real-time calculations.
  */
 
-export const calculateLineTotal = (quantity, unitPrice) => {
+export const calculateLineTotal = (quantity, unitPrice, taxPercentage = 0, discountPercentage = 0) => {
     const qty = Number(quantity) || 0;
     const price = Number(unitPrice) || 0;
-    const total = qty * price;
+    const taxRate = isNaN(Number(taxPercentage)) ? 0 : Number(taxPercentage);
+    const discountRate = isNaN(Number(discountPercentage)) ? 0 : Number(discountPercentage);
+
+    const baseTotal = qty * price;
+    const discountAmount = Math.round(baseTotal * (discountRate / 100) * 100) / 100;
+    const totalAfterDiscount = baseTotal - discountAmount;
+    const taxAmount = Math.round(totalAfterDiscount * (taxRate / 100) * 100) / 100;
+    const lineTotal = totalAfterDiscount + taxAmount;
 
     return {
-        lineTotal: parseFloat(total.toFixed(2)),
-        taxAmount: 0,
-        discountAmount: 0
+        lineTotal: parseFloat(lineTotal.toFixed(2)),
+        taxAmount: parseFloat(taxAmount.toFixed(2)),
+        discountAmount: parseFloat(discountAmount.toFixed(2))
     };
 };
 
-export const calculateSummary = (items) => {
+export const calculateSummary = (items, taxPercentageOverride = null) => {
     return items.reduce((acc, item) => {
+        const appliedTaxRate = taxPercentageOverride === null || taxPercentageOverride === undefined
+            ? item.tax
+            : taxPercentageOverride;
         const { lineTotal, taxAmount, discountAmount } = calculateLineTotal(
             item.quantity, 
             item.unitPrice, 
-            item.tax, 
+            appliedTaxRate, 
             item.discount
         );
         

@@ -1,14 +1,14 @@
-import HeroSection from '../components/HeroSection';
-import FeaturesSection from '../components/FeaturesSection';
 import QuickActions from '../components/QuickActions';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import BannerCarousel from '../components/BannerCarousel';
 
 const Home = () => {
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="site-shell">
             <Navbar />
-            <main className="pt-40">
+            <main className="space-y-12 pb-24 pt-32">
+                <BannerCarousel />
                 <QuickActions />
             </main>
             <Footer />

@@ -109,7 +109,7 @@ const SavedInvoices = () => {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="site-shell">
             <Navbar />
             <Toaster position="top-right" />
             

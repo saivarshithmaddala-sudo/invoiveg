@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { productService } from '../services/api';
 import { toast, Toaster } from 'react-hot-toast';
-import { ShoppingBag, Plus, Trash2, Edit2, Search, X, Check } from 'lucide-react';
+import { ShoppingBag, Plus, Trash2, Edit2, X, Check } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import siteBackground from '../assets/site-background.png';
+import { getPacketWeightValue, normalizeProductWeight } from '../utils/productFields';
 
 const ProductManager = () => {
     const { isAdmin } = useAuth();
@@ -12,13 +14,13 @@ const ProductManager = () => {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
-    const [formData, setFormData] = useState({ name: '', price: '', category: '', description: '' });
+    const [formData, setFormData] = useState({ name: '', price: '', packetWeight: '', category: '', brand: '', description: '' });
 
     const fetchProducts = async () => {
         setLoading(true);
         try {
             const response = await productService.getProducts();
-            setProducts(response.data);
+            setProducts(response.data.map(normalizeProductWeight));
         } catch (error) {
             toast.error("Failed to load products");
         } finally {
@@ -32,16 +34,19 @@ const ProductManager = () => {
 
     const handleOpenModal = (product = null) => {
         if (product) {
+            const normalizedProduct = normalizeProductWeight(product);
             setEditingProduct(product);
             setFormData({ 
-                name: product.name, 
-                price: product.price, 
-                category: product.category || '', 
-                description: product.description || '' 
+                name: normalizedProduct.name, 
+                price: normalizedProduct.price, 
+                packetWeight: normalizedProduct.packetWeight, 
+                category: normalizedProduct.category || '',
+                brand: normalizedProduct.brand || '', 
+                description: normalizedProduct.description || '' 
             });
         } else {
             setEditingProduct(null);
-            setFormData({ name: '', price: '', category: '', description: '' });
+            setFormData({ name: '', price: '', packetWeight: '', category: '', brand: '', description: '' });
         }
         setIsModalOpen(true);
     };
@@ -49,11 +54,17 @@ const ProductManager = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const trimmedPacketWeight = formData.packetWeight.trim();
+            const payload = {
+                ...formData,
+                packetWeight: trimmedPacketWeight,
+                category: trimmedPacketWeight,
+            };
             if (editingProduct) {
-                await productService.updateProduct(editingProduct._id, formData);
+                await productService.updateProduct(editingProduct._id, payload);
                 toast.success("Product updated successfully");
             } else {
-                await productService.createProduct(formData);
+                await productService.createProduct(payload);
                 toast.success("Product added to catalog");
             }
             setIsModalOpen(false);
@@ -64,7 +75,7 @@ const ProductManager = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Delete this product from catalog?")) return;
+        if (!window.confirm("Delete this product from master catalog? (Note: This will only remove it from future billing, it will still show in old invoices)")) return;
         try {
             await productService.deleteProduct(id);
             toast.success("Product removed");
@@ -75,60 +86,83 @@ const ProductManager = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="site-shell">
             <Navbar />
             <Toaster position="top-right" />
             
             <main className="max-w-7xl mx-auto px-6 pt-32 pb-24">
-                <div className="flex flex-col md:flex-row items-center justify-between mb-12 fade-in">
-                    <div>
-                        <h1 className="text-4xl md:text-5xl font-black font-outfit text-slate-900 leading-tight block flex items-center gap-4">
-                            <ShoppingBag className="text-emerald-500" size={36} />
-                            Product Catalog
-                        </h1>
-                        <p className="text-lg text-slate-500 font-semibold mt-2 font-outfit uppercase tracking-widest block opacity-70">
-                            Master Inventory for <span className="text-blue-600">Akshara Enterprises</span>
-                        </p>
-                    </div>
+                <div className="mb-12 fade-in">
+                    <div
+                        className="relative overflow-hidden rounded-[34px] border border-white/25 p-8 shadow-[0_28px_80px_-36px_rgba(35,4,10,0.95)] backdrop-blur-2xl md:p-10"
+                        style={{
+                            backgroundColor: 'rgba(117, 10, 19, 0.34)',
+                            backgroundImage: `linear-gradient(135deg, rgba(82, 5, 13, 0.18), rgba(255, 255, 255, 0.06)), url(${siteBackground})`,
+                            backgroundPosition: 'top left',
+                            backgroundRepeat: 'repeat',
+                            backgroundSize: '370px 371px',
+                        }}
+                    >
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-white/10" />
+                        <div className="pointer-events-none absolute -top-12 right-10 h-32 w-32 rounded-full bg-white/12 blur-3xl" />
+                        <div className="relative flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+                            <div>
+                                <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-100/25 bg-emerald-400/10 text-emerald-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-xl">
+                                    <ShoppingBag size={30} />
+                                </div>
+                                <h1 className="text-4xl font-black font-outfit leading-tight text-white md:text-5xl">
+                                    Product Catalog
+                                </h1>
+                                <p className="mt-3 text-sm font-black font-outfit uppercase tracking-[0.22em] text-rose-50/80 md:text-base">
+                                    Master Inventory for <span className="text-white">Akshara Enterprises</span>
+                                </p>
+                            </div>
 
-                    {isAdmin && (
-                        <button 
-                            onClick={() => handleOpenModal()}
-                            className="btn btn-primary px-8 py-4 text-lg mt-8 md:mt-0"
-                        >
-                            <Plus className="mr-2" />
-                            Add Master Product
-                        </button>
-                    )}
+                            {isAdmin && (
+                                <button 
+                                    onClick={() => handleOpenModal()}
+                                    className="btn self-start rounded-2xl border border-white/25 bg-white/14 px-8 py-4 text-lg text-white shadow-[0_22px_45px_-26px_rgba(20,2,6,0.9)] backdrop-blur-xl hover:bg-[#7E0E16] hover:shadow-[0_26px_52px_-26px_rgba(63,4,11,0.95)] md:self-center"
+                                >
+                                    <Plus className="mr-2" />
+                                    Add Master Product
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
-                <div className="card overflow-hidden fade-in stagger-1 opacity-100">
+                <div className="fade-in stagger-1 overflow-hidden rounded-[32px] border border-white/35 bg-[rgba(255,251,251,0.9)] shadow-[0_30px_80px_-42px_rgba(28,3,8,0.95)] backdrop-blur-2xl opacity-100">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-slate-50/50 text-[10px] uppercase tracking-[0.15em] font-black text-slate-500 font-outfit border-b border-slate-100">
+                                <tr className="border-b border-[#eadbdd] bg-[rgba(255,244,245,0.82)] text-[10px] font-black uppercase tracking-[0.15em] text-[#7e6770] font-outfit">
                                     <th className="px-8 py-6">Product Item</th>
-                                    <th className="px-6 py-6">Net Weight</th>
+                                    <th className="px-6 py-6 text-center">Brand</th>
+                                    <th className="px-6 py-6 text-center">Net Weight</th>
                                     <th className="px-6 py-6">Standard Price</th>
                                     <th className="px-8 py-6 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-[#efe2e4]">
                                 {loading ? (
                                     <tr>
                                         <td colSpan="4" className="py-20 text-center">
-                                            <div className="w-10 h-10 border-4 border-blue-600/10 border-t-blue-600 rounded-full animate-spin mx-auto" />
+                                            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-[#7E0E16]/10 border-t-[#7E0E16]" />
                                         </td>
                                     </tr>
                                 ) : products.length > 0 ? (
                                     products.map((p) => (
-                                        <tr key={p._id} className="group hover:bg-slate-50 transition-all duration-200">
-                                            <td className="px-8 py-6 text-blue-600 font-black">
+                                        <tr key={p._id} className="group transition-all duration-200 hover:bg-[rgba(255,242,244,0.85)]">
+                                            <td className="px-8 py-6 font-black text-[#7E0E16]">
                                                  {p.name}
                                             </td>
-                                            <td className="px-6 py-6">
-                                                <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase tracking-widest">
-                                                    {p.category || 'N/A'}
+                                            <td className="px-6 py-6 text-center">
+                                                <span className="rounded-lg border border-[#7E0E16]/10 bg-[#7E0E16]/8 px-3 py-1 text-[10px] font-black uppercase tracking-widest whitespace-nowrap text-[#7E0E16]">
+                                                    {p.brand || 'NO BRAND'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-6 text-center">
+                                                <span className="rounded-lg border border-[#e8dadd] bg-white/70 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-slate-600">
+                                                    {getPacketWeightValue(p) || 'N/A'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-6 font-black text-emerald-600 text-xl font-outfit">
@@ -139,13 +173,13 @@ const ProductManager = () => {
                                                     <div className="flex items-center justify-end gap-2">
                                                         <button 
                                                             onClick={() => handleOpenModal(p)}
-                                                            className="p-3 rounded-xl bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300"
+                                                            className="rounded-xl border border-[#e9dfe1] bg-white/75 p-3 text-slate-400 transition-all duration-300 hover:bg-[#fff1f2] hover:text-[#7E0E16]"
                                                         >
                                                             <Edit2 size={20} />
                                                         </button>
                                                         <button 
                                                             onClick={() => handleDelete(p._id)}
-                                                            className="p-3 rounded-xl bg-slate-50 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all duration-300"
+                                                            className="rounded-xl border border-[#e9dfe1] bg-white/75 p-3 text-slate-400 transition-all duration-300 hover:bg-rose-50 hover:text-rose-600"
                                                         >
                                                             <Trash2 size={20} />
                                                         </button>
@@ -158,7 +192,7 @@ const ProductManager = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="4" className="py-32 text-center text-slate-300 font-outfit uppercase tracking-widest text-sm">
+                                        <td colSpan="4" className="py-32 text-center text-sm font-outfit uppercase tracking-widest text-[#b58f97]">
                                             The catalog is empty
                                         </td>
                                     </tr>
@@ -171,9 +205,9 @@ const ProductManager = () => {
 
             {/* Modal for Add/Edit */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-sm">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden fade-in">
-                        <div className="p-8 border-b border-slate-100 flex justify-between items-center">
+                <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#22050a]/60 p-6 backdrop-blur-md">
+                    <div className="glass w-full max-w-lg overflow-hidden rounded-3xl border border-white/45 shadow-2xl fade-in">
+                        <div className="flex items-center justify-between border-b border-[#ecdfe2] p-8">
                             <h3 className="text-2xl font-black font-outfit text-slate-900">
                                 {editingProduct ? 'Update Master Product' : 'Register New Product'}
                             </h3>
@@ -188,7 +222,7 @@ const ProductManager = () => {
                                 <input 
                                     type="text" 
                                     required
-                                    className="input-field h-12 text-blue-600 font-bold"
+                                    className="input-field h-12 font-bold text-[#7E0E16]"
                                     placeholder="e.g. Premium Basmati Rice"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -214,13 +248,28 @@ const ProductManager = () => {
                                         required
                                         className="input-field h-12 font-black"
                                         placeholder="e.g. 500g, 1L"
-                                        value={formData.category} 
-                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        value={formData.packetWeight} 
+                                        onChange={(e) => setFormData({ ...formData, packetWeight: e.target.value })}
                                     />
                                 </div>
                             </div>
+
+                            <div>
+                                <label className="label">Select Brand</label>
+                                <select 
+                                    className="input-field h-12 font-black appearance-none cursor-pointer"
+                                    required
+                                    value={formData.brand}
+                                    onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                                >
+                                    <option value="" disabled>Choose Brand...</option>
+                                    <option value="JAYA JANARDHANA">JAYA JANARDHANA</option>
+                                    <option value="SRR">SRR</option>
+                                    <option value="MILLETS PRO">MILLETS PRO</option>
+                                </select>
+                            </div>
                             
-                             <button type="submit" className="btn btn-primary w-full py-4 text-lg">
+                             <button type="submit" className="btn w-full bg-[#7E0E16] py-4 text-lg text-white shadow-[0_22px_42px_-24px_rgba(63,4,11,0.9)] hover:bg-[#691018] hover:shadow-[0_26px_46px_-24px_rgba(63,4,11,0.95)]">
                                  <Check className="mr-2" />
                                  {editingProduct ? 'Save Master Changes' : 'Add to Catalog'}
                              </button>

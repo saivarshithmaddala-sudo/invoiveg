@@ -24,9 +24,18 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background);
+  background-color: #8f1017;
+  background-image: url('./assets/site-background.png');
+  background-position: top left;
+  background-size: 370px 371px;
+  background-repeat: repeat;
+  background-attachment: fixed;
   color: var(--text-main);
   overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -68,7 +77,24 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
+    background: linear-gradient(135deg, rgba(82, 7, 14, 0.52) 0%, rgba(124, 16, 25, 0.34) 100%);
+    backdrop-filter: blur(34px) saturate(195%);
+    -webkit-backdrop-filter: blur(34px) saturate(195%);
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 18px 52px rgba(71, 4, 15, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .glass-footer {
+    background: linear-gradient(180deg, rgba(92, 8, 16, 0.46) 0%, rgba(124, 16, 25, 0.28) 100%);
+    backdrop-filter: blur(38px) saturate(195%);
+    -webkit-backdrop-filter: blur(38px) saturate(195%);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 -18px 52px rgba(71, 4, 15, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+
+  .site-shell {
+    @apply min-h-screen;
+    background: transparent;
   }
 }
 

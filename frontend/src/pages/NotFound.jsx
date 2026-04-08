@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 
 const NotFound = () => {
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="site-shell">
             <Navbar />
             <main className="max-w-7xl mx-auto px-6 pt-52 pb-40 text-center flex flex-col items-center gap-8 fade-in">
                 <div className="w-24 h-24 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-500 animate-bounce duration-[4000ms]">

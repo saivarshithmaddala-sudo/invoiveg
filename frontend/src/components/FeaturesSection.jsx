@@ -53,7 +53,7 @@ const FeaturesSection = () => {
                         Everything you need to <span className="text-blue-600">master</span> your billing.
                     </h2>
                     <p className="text-lg text-slate-600 leading-relaxed">
-                        Say goodbye to manual errors and complicated spreadsheets. Akshara Invoicing gives you the power of enterprise-grade tools with simple, intuitive design.
+                        Say goodbye to manual errors and complicated spreadsheets. Akshara Enterprises gives you the power of enterprise-grade tools with simple, intuitive design.
                     </p>
                 </div>
 

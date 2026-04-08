@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
     productName: { type: String, required: true },
+    brand: { type: String },
+    packetWeight: { type: String, required: true, trim: true },
     description: { type: String },
-    quantity: { type: Number, required: true },
-    unitPrice: { type: Number, required: true },
+    quantity: { type: Number, required: true, min: 1 },
+    unitPrice: { type: Number, required: true, min: 0.01 },
     tax: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
     lineTotal: { type: Number, required: true }
@@ -19,7 +21,7 @@ const invoiceSchema = new mongoose.Schema({
     customerName: { type: String, required: true },
     customerAddress: { type: String, required: true },
     customerEmail: { type: String },
-    customerPhone: { type: String },
+    customerPhone: { type: String, required: true, trim: true },
 
     invoiceNumber: { type: String, required: true, unique: true },
     invoiceDate: { type: Date, default: Date.now },
@@ -30,6 +32,7 @@ const invoiceSchema = new mongoose.Schema({
         default: 'Pending' 
     },
     challanStatus: { type: String },
+    gstRate: { type: Number, default: 0 },
 
     items: [itemSchema],
     

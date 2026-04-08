@@ -10,7 +10,7 @@ const seedAdmin = async () => {
         console.log('MongoDB Connected for Seeding...');
 
         // Check if Admin exists
-        const adminExists = await User.findOne({ email: 'admin@akshara.in' });
+        const adminExists = await User.findOne({ email: 'admin@akshara.com' });
         
         if (adminExists) {
             console.log('Admin user already exists. Ready to use!');
@@ -19,9 +19,9 @@ const seedAdmin = async () => {
 
         // Create Admin
         const adminUser = await User.create({
-            name: 'Akshara Admin',
-            email: 'admin@akshara.in',
-            password: 'Admin@123',
+            name: 'Akshara Super Admin',
+            email: 'admin@akshara.com',
+            password: 'AdminPassword123',
             role: 'admin'
         });
 

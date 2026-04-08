@@ -15,6 +15,14 @@ const productSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    packetWeight: {
+        type: String,
+        trim: true
+    },
+    brand: {
+        type: String,
+        trim: true
+    },
     description: {
         type: String,
         trim: true

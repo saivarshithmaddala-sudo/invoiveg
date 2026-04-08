@@ -55,7 +55,7 @@ const InvoiceDetails = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+            <div className="site-shell flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-16 h-16 border-4 border-blue-600/10 border-t-blue-600 rounded-full animate-spin" />
                     <p className="font-bold text-slate-500 font-outfit uppercase tracking-widest text-sm">Fetching Document...</p>
@@ -67,7 +67,7 @@ const InvoiceDetails = () => {
     if (!invoice) return null;
 
     return (
-        <div className="min-h-screen bg-slate-50/50">
+        <div className="site-shell">
             <Navbar />
             <Toaster position="top-right" />
             

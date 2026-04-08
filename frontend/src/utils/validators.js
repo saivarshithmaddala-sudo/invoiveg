@@ -18,6 +18,11 @@ export const validateInvoice = (invoice) => {
 
     if (!invoice.customerName?.trim()) errors.customerName = "Customer name is required";
     if (!invoice.customerAddress?.trim()) errors.customerAddress = "Customer address is required";
+    if (!invoice.customerPhone?.trim()) {
+        errors.customerPhone = "Phone number is required";
+    } else if (!validatePhone(invoice.customerPhone)) {
+        errors.customerPhone = "Enter a valid phone number";
+    }
 
     if (!invoice.items || invoice.items.length === 0) {
         errors.items = "At least one product is required";
@@ -25,15 +30,19 @@ export const validateInvoice = (invoice) => {
         invoice.items.forEach((item, index) => {
             if (!item.productName?.trim()) {
                 if (!errors.items_detail) errors.items_detail = [];
-                errors.items_detail[index] = { ...errors.items_detail[index], productName: "Required" };
+                errors.items_detail[index] = { ...errors.items_detail[index], productName: "Product name is required" };
+            }
+            if (!item.packetWeight?.trim()) {
+                if (!errors.items_detail) errors.items_detail = [];
+                errors.items_detail[index] = { ...errors.items_detail[index], packetWeight: "Net weight is required" };
             }
             if (Number(item.quantity) <= 0) {
                 if (!errors.items_detail) errors.items_detail = [];
-                errors.items_detail[index] = { ...errors.items_detail[index], quantity: "Must be > 0" };
+                errors.items_detail[index] = { ...errors.items_detail[index], quantity: "Quantity must be greater than 0" };
             }
-            if (Number(item.unitPrice) < 0) {
+            if (Number(item.unitPrice) <= 0) {
                 if (!errors.items_detail) errors.items_detail = [];
-                errors.items_detail[index] = { ...errors.items_detail[index], unitPrice: "Must be >= 0" };
+                errors.items_detail[index] = { ...errors.items_detail[index], unitPrice: "Rate must be greater than 0" };
             }
         });
     }
@@ -44,4 +53,28 @@ export const validateInvoice = (invoice) => {
         isValid: Object.keys(errors).length === 0,
         errors
     };
+};
+
+export const getInvoiceValidationMessage = (errors) => {
+    const topLevelMessage = [
+        errors.customerName,
+        errors.customerAddress,
+        errors.customerPhone,
+        errors.items,
+        errors.dueDate,
+    ].find(Boolean);
+
+    if (topLevelMessage) {
+        return topLevelMessage;
+    }
+
+    const firstItemIndex = errors.items_detail?.findIndex(Boolean);
+    if (firstItemIndex !== undefined && firstItemIndex >= 0) {
+        const firstItemError = Object.values(errors.items_detail[firstItemIndex] || {}).find(Boolean);
+        if (firstItemError) {
+            return `Item ${firstItemIndex + 1}: ${firstItemError}`;
+        }
+    }
+
+    return "Please fill all required fields except Delivery Challan";
 };

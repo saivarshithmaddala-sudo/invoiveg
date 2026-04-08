@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import InvoiceGenerator from './pages/InvoiceGenerator';
 import SavedInvoices from './pages/SavedInvoices';
@@ -25,7 +26,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/products" element={<ProtectedRoute><ProductManager /></ProtectedRoute>} />
           <Route path="/generator" element={<ProtectedRoute><InvoiceGenerator /></ProtectedRoute>} />
           <Route path="/saved" element={<ProtectedRoute><SavedInvoices /></ProtectedRoute>} />
