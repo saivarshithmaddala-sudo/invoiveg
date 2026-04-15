@@ -1,5 +1,6 @@
 const Invoice = require('../models/Invoice');
 const { generateInvoiceNumber } = require('../utils/invoiceHelpers');
+const DEFAULT_USER_NAME = 'Akshara Team';
 
 // Create a new invoice
 const createInvoice = async (req, res) => {
@@ -15,8 +16,8 @@ const createInvoice = async (req, res) => {
         const newInvoice = new Invoice({ 
             ...req.body, 
             invoiceNumber: finalInvoiceNumber,
-            user: req.user._id,
-            userName: req.user.name
+            user: req.body.user || undefined,
+            userName: req.body.userName || DEFAULT_USER_NAME
         });
         const savedInvoice = await newInvoice.save();
         res.status(201).json(savedInvoice);
@@ -30,11 +31,6 @@ const getInvoices = async (req, res) => {
     try {
         const { invoiceNumber, customerName, status } = req.query;
         let query = {};
-
-        // Role-based filtering: Admin sees all, User sees only their own
-        if (req.user.role !== 'admin') {
-            query.user = req.user._id;
-        }
 
         if (invoiceNumber) {
             query.invoiceNumber = { $regex: invoiceNumber, $options: 'i' };

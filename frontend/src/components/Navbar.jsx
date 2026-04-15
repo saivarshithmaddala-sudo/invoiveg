@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, LogOut, User } from 'lucide-react';
+import { FileText, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
-    const { user, logout, isAdmin } = useAuth();
+    const { user, isAdmin } = useAuth();
     const [isAtTop, setIsAtTop] = useState(true);
 
     useEffect(() => {
@@ -38,43 +38,23 @@ const Navbar = () => {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8">
-                    {user ? (
-                        <>
-                            <Link to="/dashboard" className="text-sm font-bold text-white hover:text-white transition-colors uppercase tracking-widest font-outfit">Home</Link>
-                            <Link to="/saved" className="text-sm font-bold text-white hover:text-white transition-colors uppercase tracking-widest font-outfit">Orders</Link>
-                            {isAdmin && (
-                                <Link to="/products" className="text-sm font-bold text-white hover:text-white transition-colors uppercase tracking-widest font-outfit">Products</Link>
-                            )}
-                            
-                            <div className="h-6 w-px bg-white/18" />
-
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-3 pr-4 border-r border-white/18">
-                                    <div className="w-8 h-8 rounded-lg bg-white/14 border border-white/18 flex items-center justify-center text-white/90 backdrop-blur-md">
-                                        <User size={16} />
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-xs font-black text-white font-outfit leading-none">{user.name || 'User'}</p>
-                                        <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-white/88">
-                                            {user.role === 'admin' ? 'Administrator' : 'Billing Staff'}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <button 
-                                    onClick={logout}
-                                    className="p-2.5 rounded-xl text-white/82 hover:text-white hover:bg-white/14 transition-all duration-300 backdrop-blur-md"
-                                    title="Sign Out"
-                                >
-                                    <LogOut size={20} />
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        <Link to="/login" className="px-6 py-2 rounded-full bg-white text-[#7E0E16] text-xs font-bold uppercase tracking-widest hover:bg-slate-100 transition-colors shadow-md shadow-black/10">
-                            Log In
-                        </Link>
+                    <Link to="/" className="text-sm font-bold text-white hover:text-white transition-colors uppercase tracking-widest font-outfit">Home</Link>
+                    <Link to="/saved" className="text-sm font-bold text-white hover:text-white transition-colors uppercase tracking-widest font-outfit">Orders</Link>
+                    {isAdmin && (
+                        <Link to="/products" className="text-sm font-bold text-white hover:text-white transition-colors uppercase tracking-widest font-outfit">Products</Link>
                     )}
+
+                    <div className="h-6 w-px bg-white/18" />
+
+                    <div className="flex items-center gap-3 rounded-full border border-white/18 bg-white/10 px-4 py-2 text-white/90 backdrop-blur-md">
+                        <ShieldCheck size={16} />
+                        <div className="text-right">
+                            <p className="text-xs font-black text-white font-outfit leading-none">{user.name}</p>
+                            <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-white/88">
+                                Direct Access Enabled
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

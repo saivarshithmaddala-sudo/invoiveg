@@ -104,11 +104,11 @@ const Register = () => {
                     <div className="mt-8 border-t border-white/30 pt-8 text-center">
                         <p className="mb-4 text-sm font-medium text-slate-600">Already have an account?</p>
                         <Link
-                            to="/login"
+                            to="/"
                             className="flex items-center justify-center gap-2 font-bold text-[#7E0E16] transition-colors duration-200 hover:text-[#5f0b12]"
                         >
                             <LogIn size={18} />
-                            Access Login Portal
+                            Return to Dashboard
                         </Link>
                     </div>
                 </div>

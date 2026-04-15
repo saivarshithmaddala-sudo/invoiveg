@@ -44,9 +44,9 @@ const invoiceSchema = new mongoose.Schema({
     notes: { type: String },
     logo: { type: String }, // Placeholder for logo URL or Base64 string
     
-    // Ownership Tracking
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    userName: { type: String, required: true }
+    // Ownership tracking remains optional when direct access is enabled.
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    userName: { type: String, required: true, default: 'Akshara Team' }
 
 }, { timestamps: true });
 

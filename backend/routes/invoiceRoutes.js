@@ -8,13 +8,11 @@ const {
     deleteInvoice
 } = require('../controllers/invoiceController');
 
-const { protect, authorize } = require('../middleware/auth');
-
 // All routes are prefixed with /api/invoices
-router.post('/', protect, createInvoice);
-router.get('/', protect, getInvoices);
-router.get('/:id', protect, getInvoiceById);
-router.put('/:id', protect, updateInvoice);
-router.delete('/:id', protect, authorize('admin'), deleteInvoice);
+router.post('/', createInvoice);
+router.get('/', getInvoices);
+router.get('/:id', getInvoiceById);
+router.put('/:id', updateInvoice);
+router.delete('/:id', deleteInvoice);
 
 module.exports = router;

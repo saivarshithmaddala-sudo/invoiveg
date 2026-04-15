@@ -2,7 +2,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
 import { Navigate, Link } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const Landing = () => {
     const { user } = useAuth();
@@ -34,9 +34,9 @@ const Landing = () => {
                                 Official Operations Platform
                             </p>
                             
-                            <Link to="/login" className="inline-flex items-center gap-3 bg-white text-[#7E0E16] px-10 py-5 rounded-full text-lg font-black shadow-[0_20px_40px_-10px_rgba(255,255,255,0.3)] transition-all duration-300 hover:-translate-y-2 hover:bg-slate-50 uppercase tracking-widest border-2 border-transparent hover:border-white/50">
-                                <LogIn size={24} />
-                                Access Core
+                            <Link to="/" className="inline-flex items-center gap-3 bg-white text-[#7E0E16] px-10 py-5 rounded-full text-lg font-black shadow-[0_20px_40px_-10px_rgba(255,255,255,0.3)] transition-all duration-300 hover:-translate-y-2 hover:bg-slate-50 uppercase tracking-widest border-2 border-transparent hover:border-white/50">
+                                <ArrowRight size={24} />
+                                Open Dashboard
                             </Link>
                         </div>
                     </div>
