@@ -36,13 +36,13 @@ const ProductManager = () => {
         if (product) {
             const normalizedProduct = normalizeProductWeight(product);
             setEditingProduct(product);
-            setFormData({ 
-                name: normalizedProduct.name, 
-                price: normalizedProduct.price, 
-                packetWeight: normalizedProduct.packetWeight, 
+            setFormData({
+                name: normalizedProduct.name,
+                price: normalizedProduct.price,
+                packetWeight: normalizedProduct.packetWeight,
                 category: normalizedProduct.category || '',
-                brand: normalizedProduct.brand || '', 
-                description: normalizedProduct.description || '' 
+                brand: normalizedProduct.brand || '',
+                description: normalizedProduct.description || ''
             });
         } else {
             setEditingProduct(null);
@@ -89,7 +89,7 @@ const ProductManager = () => {
         <div className="site-shell">
             <Navbar />
             <Toaster position="top-right" />
-            
+
             <main className="max-w-7xl mx-auto px-6 pt-32 pb-24">
                 <div className="mb-12 fade-in">
                     <div
@@ -118,7 +118,7 @@ const ProductManager = () => {
                             </div>
 
                             {isAdmin && (
-                                <button 
+                                <button
                                     onClick={() => handleOpenModal()}
                                     className="btn self-start rounded-2xl border border-white/25 bg-white/14 px-8 py-4 text-lg text-white shadow-[0_22px_45px_-26px_rgba(20,2,6,0.9)] backdrop-blur-xl hover:bg-[#7E0E16] hover:shadow-[0_26px_52px_-26px_rgba(63,4,11,0.95)] md:self-center"
                                 >
@@ -153,7 +153,7 @@ const ProductManager = () => {
                                     products.map((p) => (
                                         <tr key={p._id} className="group transition-all duration-200 hover:bg-[rgba(255,242,244,0.85)]">
                                             <td className="px-8 py-6 font-black text-[#7E0E16]">
-                                                 {p.name}
+                                                {p.name}
                                             </td>
                                             <td className="px-6 py-6 text-center">
                                                 <span className="rounded-lg border border-[#7E0E16]/10 bg-[#7E0E16]/8 px-3 py-1 text-[10px] font-black uppercase tracking-widest whitespace-nowrap text-[#7E0E16]">
@@ -171,13 +171,13 @@ const ProductManager = () => {
                                             <td className="px-8 py-6 text-right">
                                                 {isAdmin ? (
                                                     <div className="flex items-center justify-end gap-2">
-                                                        <button 
+                                                        <button
                                                             onClick={() => handleOpenModal(p)}
                                                             className="rounded-xl border border-[#e9dfe1] bg-white/75 p-3 text-slate-400 transition-all duration-300 hover:bg-[#fff1f2] hover:text-[#7E0E16]"
                                                         >
                                                             <Edit2 size={20} />
                                                         </button>
-                                                        <button 
+                                                        <button
                                                             onClick={() => handleDelete(p._id)}
                                                             className="rounded-xl border border-[#e9dfe1] bg-white/75 p-3 text-slate-400 transition-all duration-300 hover:bg-rose-50 hover:text-rose-600"
                                                         >
@@ -208,21 +208,21 @@ const ProductManager = () => {
                 <div className="fixed inset-0 z-[200] flex items-center justify-center bg-[#22050a]/60 p-6 backdrop-blur-md">
                     <div className="glass w-full max-w-lg overflow-hidden rounded-3xl border border-white/45 shadow-2xl fade-in">
                         <div className="flex items-center justify-between border-b border-[#ecdfe2] p-8">
-                            <h3 className="text-2xl font-black font-outfit text-white">
+                            <h3 className="text-2xl font-black font-outfit text-slate-900">
                                 {editingProduct ? 'Update Master Product' : 'Register New Product'}
                             </h3>
-                            <button onClick={() => setIsModalOpen(false)} className="text-white/60 hover:text-white">
+                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-900">
                                 <X size={24} />
                             </button>
                         </div>
-                        
+
                         <form onSubmit={handleSubmit} className="p-8 space-y-6">
                             <div>
-                                <label className="label text-white">Product Name</label>
-                                <input 
-                                    type="text" 
+                                <label className="label">Product Name</label>
+                                <input
+                                    type="text"
                                     required
-                                    className="input-field h-12 font-bold text-white bg-white/10 border-white/20 placeholder:text-white/40"
+                                    className="input-field h-12 font-bold text-[#7E0E16]"
                                     placeholder="e.g. Premium Basmati Rice"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -231,53 +231,53 @@ const ProductManager = () => {
 
                             <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="label text-white">Standard Price (₹)</label>
-                                    <input 
-                                        type="number" 
+                                    <label className="label">Standard Price (₹)</label>
+                                    <input
+                                        type="number"
                                         required
-                                        className="input-field h-12 font-black text-white bg-white/10 border-white/20 placeholder:text-white/40"
+                                        className="input-field h-12 font-black"
                                         placeholder="0.00"
                                         value={formData.price}
                                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                                     />
                                 </div>
                                 <div>
-                                    <label className="label text-white">Net Weight (ml,kg,gm,L)</label>
-                                    <input 
-                                        type="text" 
+                                    <label className="label">Net Weight (ml,kg,gm,L)</label>
+                                    <input
+                                        type="text"
                                         required
-                                        className="input-field h-12 font-black text-white bg-white/10 border-white/20 placeholder:text-white/40"
+                                        className="input-field h-12 font-black"
                                         placeholder="e.g. 500g, 1L"
-                                        value={formData.packetWeight} 
+                                        value={formData.packetWeight}
                                         onChange={(e) => setFormData({ ...formData, packetWeight: e.target.value })}
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="label text-white">Select Brand</label>
-                                <select 
-                                    className="input-field h-12 font-black appearance-none cursor-pointer text-white bg-white/10 border-white/20"
+                                <label className="label">Select Brand</label>
+                                <select
+                                    className="input-field h-12 font-black appearance-none cursor-pointer"
                                     required
                                     value={formData.brand}
                                     onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
                                 >
-                                    <option value="" className="text-slate-900 bg-white" disabled>Choose Brand...</option>
-                                    <option value="JAYA JANARDHANA" className="text-slate-900 bg-white">JAYA JANARDHANA</option>
-                                    <option value="SRR" className="text-slate-900 bg-white">SRR</option>
-                                    <option value="MILLETS PRO" className="text-slate-900 bg-white">MILLETS PRO</option>
+                                    <option value="" disabled>Choose Brand...</option>
+                                    <option value="JAYA JANARDHANA">JAYA JANARDHANA</option>
+                                    <option value="SRR">SRR</option>
+                                    <option value="MILLETS PRO">MILLETS PRO</option>
                                 </select>
                             </div>
-                            
-                             <button type="submit" className="btn w-full bg-[#7E0E16] py-4 text-lg text-white shadow-[0_22px_42px_-24px_rgba(63,4,11,0.9)] hover:bg-[#691018] hover:shadow-[0_26px_46px_-24px_rgba(63,4,11,0.95)]">
-                                 <Check className="mr-2" />
-                                 {editingProduct ? 'Save Master Changes' : 'Add to Catalog'}
-                             </button>
+
+                            <button type="submit" className="btn w-full bg-[#7E0E16] py-4 text-lg text-white shadow-[0_22px_42px_-24px_rgba(63,4,11,0.9)] hover:bg-[#691018] hover:shadow-[0_26px_46px_-24px_rgba(63,4,11,0.95)]">
+                                <Check className="mr-2" />
+                                {editingProduct ? 'Save Master Changes' : 'Add to Catalog'}
+                            </button>
                         </form>
                     </div>
                 </div>
             )}
-            
+
             <Footer />
         </div>
     );
