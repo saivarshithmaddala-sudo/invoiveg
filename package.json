@@ -2,8 +2,10 @@
   "name": "akshara-erp-root",
   "version": "1.0.0",
   "scripts": {
+    "start": "node backend/server.js",
     "build": "cd frontend && npm install && npm run build && cd .. && cp -r frontend/dist/* ."
   },
+
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
