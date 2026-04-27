@@ -8,10 +8,13 @@ const productRoutes = require('./routes/productRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 // Configure environment variables
-dotenv.config();
+const path = require('path');
+dotenv.config({ path: path.join(__dirname, '.env') });
 
-// Connect to database
-connectDB();
+// Connect to database only in non-serverless environments
+if (process.env.NODE_ENV !== 'production' || process.env.RENDER) {
+    connectDB();
+}
 
 const app = express();
 
