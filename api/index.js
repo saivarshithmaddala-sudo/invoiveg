@@ -1,5 +1,5 @@
-const app = require('../server.js');
-const connectDB = require('../config/db');
+const app = require('../backend/server.js');
+const connectDB = require('../backend/config/db');
 
 let isConnected = false;
 
